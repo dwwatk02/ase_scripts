@@ -1,4 +1,4 @@
-#!/usr/bin/env python  
+#!/usr/bin/env python3
   
 #!! IMPORTANT NOTES:  
 #1) - After receiving a response from the server remove the first 3 characters from it. (It's gibberish and generates a lot of unwanted errors)   
@@ -14,7 +14,8 @@ import requests
 from requests.exceptions import ConnectionError
 import xml.etree.ElementTree as ET  
 import sys  
-import re  
+import re
+import json
 import time
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -49,8 +50,8 @@ class ase(object):
       self.asmServer = server
        
    def logIn(self,user,passwd):  
-      data={'userid': user, #User name for login to the AppScan Enterprise Server  
-                  'password': passwd, #password for the user name provided above  
+      data={'userid': 'EC2AMAZ-44NU39T\\appscanadmin', #User name for login to the AppScan Enterprise Server  
+                  'password': 'd@tchf1re@ppscan', #password for the user name provided above  
                   'featurekey': 'AppScanEnterpriseUser'}  # special parameter requested by the AppScan Enterprise server   
                     
       #Login to the Enterprise server. Logout with endSession() method once you finished working with the server.
@@ -71,7 +72,7 @@ class ase(object):
       data={'userId': user, #User name for login to the AppScan Enterprise Server  
                   'password': passwd, #password for the user name provided above  
                   'featureKey': 'AppScanEnterpriseUser'}  # special parameter requested by the AppScan Enterprise server    
-      r = requests.post(self.asmServer+'/api/login', data=data, headers=headers, verify = False) #The url for login is https://<machineurl>/ase/services/login   
+      r = requests.post(self.asmServer+'/api/login', data=json.dumps(data), headers=headers, verify = False) #The url for login is https://<machineurl>/ase/services/login   
       return r.text #return the complete response in html format.
       
     #Return all the templates in the enterprise server in an xml message
@@ -264,7 +265,9 @@ class ase(object):
       
       list={} #Create an empty list  
       for item in root: #Cycle through all the items returned by the Enterprise server.  
-         list[item[2].text]=[item[0].text, item[8].text]  #Add the items to the list. The [0] attribute is the id, the [1] is the name and [2] is the type  
+         #for el in item:
+            #print(str(el))
+         list[item[2].text]=[item[0].text, item[8].text, item[4].text]  #Add the items to the list. The [0] attribute is the id, the [1] is the name and [2] is the type  
 
       return list
 
@@ -338,6 +341,22 @@ class ase(object):
       response=r.text[3:]  
       return response
    
+   def bigReport(self): # default value is 'Automatic' login  
+      data={'__EVENTTARGET=ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24ExportButton&__EVENTARGUMENT=&__VIEWSTATE=qKFiEJPVGqaFZsEXEUYY7YIBCkzt%2Bmko%2B5RgawXomD2%2BakUW1D%2BULYRm8Q6TrDlW%2BS%2BXyQs0bHPfbOf23NIHgBtZK0OwPrp7B4jtsBCy%2B3l4xUtP06w62YN62QjwpuKlCouMhqrQKji%2F9LeE0CNCycXtFsyzoo8aujei3u6wL0ajNcC0cszVWa7MwXcmfe0pj57N43U1bgaiRwHruSQp3H4oQJixgptx4gNME2yPvR8KdhzRSxHmVwF76aV1rdqhXIw4VQ4aIzRuy3ngaNGwZSdMi8RA4FFnbFd25kAPbzQ4014bTdY6HiNFj4PEFIIrEdekiRgxvdq3BTwBNpkHbQBzSxdKu%2FGfW97Caww2ltz2L1hQZ%2FMRLWqnqsVCI1Yd92K4s924OeFhzcGvUc%2FaXqfpa%2Fc3GbKS4WVIn1e5XjOsoWux%2FczWJhesWl8Uth9ACImyGwR%2F0TQ9uWY%2BXyGBMv3%2BJiSf%2FP%2FL8lUcVlpgtNuP%2FedE8hiWU3YfiV6eifbSdDFJrlbJDEbRlqOhoA%2FeXYnWVf%2BG5M90fcy8MiBUXDBat3B0mc%2B17Ml8MhmY54kdt2tST0E7YRd7AtFWqHT%2BvEUk69C7YfHks3MPJJhI1TbYhZaHKz0v6e6SUh%2FRSCNmiphtwuiQjwAMXAmPwgf8Bo%2Fdu5yRAD6if6DMsQruIxwHpHxt1TXIZ2E9y24yDxSkk1UhQMHvq2M%2Fxv2rfBhxnPiIyFHLrYiIuyERonc9Zq%2FcKbdHmc7XoE%2B0Jf5zYznYomrRDulPzX4Id1pB21aNsbrRP0RO48NqBHlt%2FHD%2BZvSJeflbu23naDD%2Fic65vXFemtdDWQOz3%2FqJ3dYSf%2Fimf3Ns2NxoNyhHPQOMvHAyKJoLggxPZcb7Pg0uZRk%2F9OVkq1KjYjcJ96F20iRv7fjf81%2FnUOXByTMWRxJu2yjiEJ6rOdVasNR%2B%2FCpmS1SHZPdgKMyWMv7uAlEDNhBBsD1errmrjdBmKc8PD9wmlFIDih7oeDj50%2BdCL%2FpKNJNEvrBXSfww1DgWS0mheb8PJlXjMRccIfdWzP4LYEsy0u8pSWANcw05UVMBc799KeIa8yWzylItMBnSPCSVWQGXFH12QnnL9LdhU2qjT4wtpRuUydgZiAVRE2NlXoMAHHa7K12RNqpnsmVtbbtBpW1NShAckv4OwniOotFcJ3p3L1VLft8dB9Jx8CSAFidvBdbEvBePZ28LCNkpAaIrwqOKazIJouuiKvbLUEWW%2F97fRFw6UpdmjSW%2BC%2BQ10HxX3MLlaDBuP%2FYFXqzafclJZBbfM7yBi4QWpH8WlCJepcgYUEaxHgcVvCaPhgmmjxEZzJMDdk7Uk%2FHNvMqRlmUDbfa1R8UuIBsc3zU5SY1DX9PxR0%2B278NwjGrI441rBO8%2FlHUYNYBLZT4rflxtxHmKSliV5HSNJAI0npOCNmD%2FVb7ZxsmB5eLg5K34F6B8Lo%2BHHwSmHxD4BJ%2B%2BlSNs01LUoKGzBWr8nrzE2qYuCVp2eHKORKLjz861jfnJor9xKUQZRifI1nZX%2BWQAYoT897sKGFt6G1nztT7TH1nw870%2F9VgFhxQ7l4wrx1zLSbCSCxdbgrV0VnXB4yWWMftGFrVxPsgjbY%2FoHyTBeAWIsssTdSKcbTCe6aYY8cutFif7OcSiXaNDO0hgiGQcatB0srtnracnaa233jjd%2BH4kBbWxU1kON%2B7aBKKOfldqPZeKoum8DFznva%2FckcfguMUSzqLkPcJqYl%2F9gegOLMTAIzwmvN4XqO%2FTmdecdeMTw7jX4LOwEEEYrfJqJhOHXATUoS%2F2P2BbpQN4GLV0HY73JMHsmDnQfocYZI6MRJ7WpLdPFGKTylwHZiXSx639KGbxXJz82ck9HS7kn0Y%2FvBX0AcqQsvxY8oCSW36NrgGizgERCuTNItYF9%2BUxlDXUI1pyGvIglP7ejDJ8PlAC5vWzn0xWdIiW%2BPo2YUNLbMLnXp0kAJT0d0BRJ9kY7LoQFI5IeA3S38HMzSk4Mzn%2B5CkBP2jIyuoDBo%2Fpm%2BRxpscIgXrSJOzDhMXe0Jkm648rP7HV6rSap7qotBktGY8w0PVJH1dqg9N%2FxE4pdKQUWlV0d9pkh9n6o6srNVYS3LEt3BmQg9IjEUIoj5a7%2FofhAQpaJlf9j2wpsEQjbOQk0R4ZDOjbHAUx5baKSiSxbQhEnKk2DZOkNQ76PTC494ty0%2FpQdWw%2FPFcmC1regnL7FHg08BInT4UNjGvIk%2BhvgtjVvqKRKKaX7cNxMCRQfFMqsozr%2F9%2FuHds5fZAZddXBuK2tl5YFKd8rBA8wfw31ZnDqYJ%2BOic93wi82o%2Fc%2FzImD0LMvDyfdDF5hiuEgqxjQLMO%2BOvAHCxwuPkvUC6Qv2oFfiLkRz80KTAz25cuRU5vAHWMzQJumBstW4a3S%2FrE8EGWBD%2BJwJ3WH8QxDmTOs5jMOAez9MUeeDwqFCo2KimNaekhzUMvDpV6vc26obP%2B23pG7cYmUg0Az7Q9rRUBg9dm1x4t95PPqMB6oSW90QxB2iDbxgCxYBPHXPwqLZjwqffZatRsc%2Bkl4bAkvz1cbmHkE0IbjpLdZALZrGu1%2FLUvMP5p%2FRxiATzpK4S4f0sJ7X9Sj9U9TZBPvU5Fp4b4x3CzLoATF6ojo3lLc1ztSY27LDCKetveiG0ELzn0CNHpK%2FYRIy%2BKvVfHV3pZtPoz4slLOO1r4JOwbRg0jFjW1JjSooccj8MBBL%2FkHCzZdfDDU7hetMF%2FRqQMKZGmwP60VAFtEXHEIu82Km1uIIgMXAkTMPawME4fHC7FQnF%2BTcri%2Fn3QKTLdyxsgNdZLpJyudw8LUCcxLf%2Bsauf8kPxZC7bmU4rSYUsPr221kIjc9PMktcgkNlleDkGsL7gcPaNizi%2F8ko1ePfYGWEsu0DqMoc6WnM%2BGnosvL32NiNpsYcBXvwyh%2F3b0OHrt2Jepa27JHhSQyHeCD3aq1vFmTO5uyGVaVyfV5qmGHTV548f6PBYqPG7aDNnjuoi4o2KTV9JE9xetYHfJIrncc9g4DPLxQ63ebl8wDxyOwJt1ydPPKRZisXduBQ1aNsBND%2BbflSjkz4PV%2BJX5kOBjQ5E2mC0bKkA9rvZYXwbbfs2U5qC54vCXgSQN171BfRJiA5Zo1WqWTs3Vnzv0bzAb2hzeX%2BQyRmmMcASzCi21U%2Bg9t1sYSRZdN2T3Uzn8x1dZOXYf7gZLyMngdJzoo5CQnVWVPR8ouL08xaHs2FnixdZH3A1Grj1qjpB%2BHwPl1B1eOvilmDwj%2FIPOvh3duTRh6pZbe%2FESLSXifGQ2Meg1dBG2f4Db%2B0nVCeaFLUDnmjisM9YZsHMTcEm19AbWybXBuVgidt72bUG8Hvp6yU4T121zqztvqUMHzj8GuLVkibWhFBK8EOD1GaNI6L7tZ%2FrI7RAf%2B1mv%2FzL70yUPBUfhii7bIJXe0G1YJEZ8UugzUTh5XRvii1EOZgJ7NGpOm7WIjCmYb%2Fa%2FSsMTlFLRUujbhsjF28R9UlwMyiUM5Sh09nCtxX1VUQkhbTi8op1doDP8ZjIby9vEPybMRq8RZnX5GwfrnJvTy1MM3vNWaMTrgQY%2BCdBuW9HSucBjWzThMcdfY0LNeBKSI4%2BsA2x9hHx2czk%2Fj4bmnSe0VYpGCaaGWWL4Gy7jw899S18AixRGoOvvyIKECgqG%2BTOLhlaeRK%2BNd99IeouKff44o%2FEzf12gcXqulTaVQrNU%2Fc59KKJRWG7VHVxv4aT8%2Boafvq7R4M%2Ba%2BViuXpibM1xkAzoB0lW9dBIHwUrXRg32O8N5%2B1NXd%2B5l0xiI9IdV2eVUHEzWxjzMlIlKgKVA%2BXkiwivWIp4En7Jf%2BMNdwZ2ROIZKur2%2BHBQ9N2nNjYWHdbJdHsRPZfby11xw1pRyYkigEhRHWRWa9w88ecGOy09l208ncliEc2sohqAI%2FkBgA7ZgMLZnG5mLDPP%2F3GLJJGaZCq3XV&__VIEWSTATEGENERATOR=954EC34A&ctl00%24ScrollerLeft=0&ctl00%24ScrollerTop=0&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24SummaryCheckBox=on&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24TOCCheckBox=on&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24VariantsCheckBox=on&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24RequestResponseCheckBox=on&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24LimitVarintsCheckBox=on&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24MaxVariantsTextBox=3&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24AdvisoriesCheckBox=on&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24RemediationCheckBox=on&ctl00%24ContentPanePlaceHolder%24PDFExportSettingsControl%24UserCommentsCheckBox=on'}  
+      retries = 0
+      for retries in range(5):
+         try:
+            r=self.session.post(self.server+'/Reports/PDFSettings.aspx?fiid=322&fid=1&rid=1769&viewid=8&exportformat=pdfdetailed&exportdelivery=download',data=data,verify=False)
+         except (Exception) as e:
+            self.connectionErrors += 1
+            time.sleep(2)
+            continue
+         break
+      if(retries >= 4): sys.exit("Cannot communitcate with ASE, Max retries attempted")
+
+      response=r.text  
+      return response  
+    #Change login credentials. These credentials work with automatic login method.
    def changeLoginType(self,scanId, loginType = '3'): # default value is 'Automatic' login  
       data={'value':loginType}  
       retries = 0
@@ -353,7 +372,6 @@ class ase(object):
 
       response=r.text[3:]  
       return response  
-    #Change login credentials. These credentials work with automatic login method.   
    def changeCredentials(self,scanId,username,password):  
       #Change username  
       data={'value':username}   
@@ -473,6 +491,7 @@ class ase(object):
          for retries in range(5):
             try:
                r=self.session.get(self.server+'/services/folders',verify=False)  #Get information about the root directory
+               #r=self.session.get(self.server+'/services/schema',verify=False)  #Get information about the root directory
             except (Exception) as e:
                self.connectionErrors += 1
                time.sleep(2)
@@ -497,7 +516,8 @@ class ase(object):
       root=ET.fromstring(r.text[3:]) #Convert the response into an element tree   
       for folder in root: #Cycle through every sub-element in the main element. Each sub-element is a folder.  
          list[folder[0].text]=folder[1].text # The first attribute [0] is the id while [1] is the name  
-      return list  
+      return list
+
            
    def getAllFoldersList(self, parentFolder='-1'):
       folders = self.getFoldersList(parentFolder)
@@ -545,8 +565,19 @@ class ase(object):
             continue
          break
       if(retries >= 4): sys.exit("Cannot communitcate with ASE, Max retries attempted")
-       
-      return r.text[3:] #Return the response in string format  
+      return r.text[3:] #Return the response in string format
+   def getScanLogs(self,folderId):
+        retries = 0
+        for retries in range(5):
+            try:
+                r=self.session.get(self.server+'/services/folderitems/'+folderId+'/statistics',verify=False)  #Get the content of the folder    
+            except (Exception) as e:
+                self.connectionErrors += 1
+                time.sleep(2)
+                continue
+            break
+        if(retries >= 4): sys.exit("Cannot communitcate with ASE, Max retries attempted")
+        return r.text #Return the response in string format  
       
     #Get all the items in a folder. The items could be scans, report packs, dashboards or imported jobs.  
     #The result will be in a list format. Type will be list[id] - [name][type]   
@@ -563,12 +594,12 @@ class ase(object):
             continue
          break
       if(retries >= 4): sys.exit("Cannot communitcate with ASE, Max retries attempted")
-      root=ET.fromstring(r.text[3:])  
+      #root=ET.fromstring(r.text[3:])  
       list={} #Create an empty list  
-      for item in root: #Cycle through all the items returned by the Enterprise server.  
-         list[item[0].text]=[item[1].text, item.tag[47:]]  #Add the items to the list. The [0] attribute is the id, the [1] is the name and [2] is the type  
+      #for item in root: #Cycle through all the items returned by the Enterprise server.  
+         #list[item[0].text]=[item[1].text, item.tag[47:]]  #Add the items to the list. The [0] attribute is the id, the [1] is the name and [2] is the type  
           
-      return list  
+      return r.text  
     
     #Get information about an app in the ASM  
    def getAppInfo(self,id):
@@ -586,8 +617,13 @@ class ase(object):
       return r
       
    def getAppList(self):
-      r = self.session.get(self.server+'api/applications?columns=name%2Cid',verify=False)
-      print(r.text)
+        additionalHeaders = { 
+            "Content-Type": "application/json",
+            "Range":"items=0-99"
+        }
+        self.session.headers.update(additionalHeaders)
+        r = self.session.get(self.asmServer+'api/applications?columns=name%2Cid',headers=self.session.headers,verify=False)
+        print(r.text)
        
    def getSchema(self):
       retries = 0
