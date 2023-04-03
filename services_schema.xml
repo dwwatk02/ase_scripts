@@ -1,0 +1,2703 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Services" targetNamespace="http://www.ibm.com/Rational/AppScanEnterprise" elementFormDefault="qualified" xmlns="http://www.ibm.com/Rational/AppScanEnterprise" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[
+			Licensed Materials - Property of IBM 
+			Restricted Materials of IBM 
+			(c) Copyright IBM Corp. 2009 All Rights Reserved. 
+			IBM Rational AppScan Enterprise Edition 
+ 
+			Copying, redistribution and/or modification is prohibited. 
+			U.S. Government Users Restricted Rights:  Use, duplication or 
+			disclosure restricted by GSA ADP Schedule Contract with IBM Corp. 
+	
+			To modify the generated Services.cs run the bat file:
+				Source\Server\WebApp\xsd\GenerateServiceClasses.bat
+			]]>
+    </xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="Version">
+    <xs:annotation>
+      <xs:documentation>
+        Information about the version of AppScan Enterprise/Policy Tester that is installed.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="build" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Product Build Number</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="dbversion" type="xs:int" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Product Database Version</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="rules-version" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Security Rules Version</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="user-name" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>User name of the currently logged in user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BasicObject">
+    <xs:sequence>
+      <xs:element name="id" type="xs:int" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Database ID of the object</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Name of the object</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Description of the object</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+			<xs:element name="folder-type" type="xs:int" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Folder's type</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+      <xs:element name="parent" maxOccurs="1" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="id" type="xs:int" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>Parent ID.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+              </xs:annotation>
+            </xs:any>
+          </xs:sequence>
+          <xs:attribute name="href" type="xs:string" use="required">
+            <xs:annotation>
+              <xs:documentation>Url of the parent object</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="href" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Url to access this object.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="weblink" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>WebUI Url of this object.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Folder">
+    <xs:complexContent>
+      <xs:extension base="BasicObject">
+        <xs:sequence>
+          <xs:element name="contact" type="xs:string" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Folder's contact information</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="role" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Role the currently logged in user has on this folder.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="id" minOccurs="1" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Role ID
+
+                      Available Roles:
+
+                      No Access = 1,
+                      Report Consumer = 32,
+                      Issue Manager = 256,
+                      Report Administrator = 1024,
+                      Job Administrator = 32768,
+                    </xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                      <xs:minExclusive value="0">
+                      </xs:minExclusive>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+                <xs:element name="name" minOccurs="0" maxOccurs="1" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>Localized name of the role the currently logged in user has on this folder.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="folders" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Summary information about any subfolders which this folder contains.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="count" type="xs:int" minOccurs="1" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>The count of subfolders this folder contains.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+                  </xs:annotation>
+                </xs:any>
+              </xs:sequence>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url to access the subfolders collection.</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="folder-items" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Summary information about any folder items which this folder contains.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="count" type="xs:int" minOccurs="1" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>The count of items this folder contains.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+                  </xs:annotation>
+                </xs:any>
+              </xs:sequence>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url to access the folder items collection.</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="users" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>List of users for this folder.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="user" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>User of this folder</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="type" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                          <xs:documentation>User Type</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                          <xs:attribute name="user-type-id" type="xs:int" use="required">
+                            <xs:annotation>
+                              <xs:documentation>User Type ID</xs:documentation>
+                            </xs:annotation>
+                          </xs:attribute>
+                          <xs:attribute name="name" type="xs:string" use="required">
+                            <xs:annotation>
+                              <xs:documentation>User Type Name</xs:documentation>
+                            </xs:annotation>
+                          </xs:attribute>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="role" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                          <xs:documentation>User Role</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                          <xs:attribute name="value" type="xs:string" use="required">
+                            <xs:annotation>
+                              <xs:documentation>User Role Enum</xs:documentation>
+                            </xs:annotation>
+                          </xs:attribute>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="user-id" type="xs:int" use="required">
+                      <xs:annotation>
+                        <xs:documentation>User ID</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="name" type="xs:string" use="required">
+                      <xs:annotation>
+                        <xs:documentation>User Name</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="full-name" type="xs:string" use="required">
+                      <xs:annotation>
+                        <xs:documentation>Full Name</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FolderItem">
+    <xs:annotation>
+      <xs:documentation>Base object for any folder item (job, report pack, dashboard).  This object is not used directly.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="BasicObject">
+        <xs:sequence>
+          <xs:element name="contact" minOccurs="1" maxOccurs="1" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Contact information for this folder item.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="last-run" minOccurs="0" maxOccurs="1" type="xs:dateTime">
+            <xs:annotation>
+              <xs:documentation>
+                The last time this folder item was run.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="last-updated" minOccurs="0" maxOccurs="1" type="xs:dateTime">
+            <xs:annotation>
+              <xs:documentation>
+                The last time this folder item was modified.  Reserved for future use.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+					<xs:element name="date-created" minOccurs="0" maxOccurs="1" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation>
+								The date this folder item was created.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="state" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Current state of this folder item.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="id" minOccurs="1" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>
+                      State ID.
+
+                      Available States:
+
+                      Ready = 1,
+                      Starting = 2,
+                      Running = 3,
+                      Resuming = 6,
+                      Canceling = 7,
+                      Suspending = 8,
+                      Suspended = 9,
+                      PostProcessing = 10,
+                      Ending = 12,
+                    </xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                      <xs:minExclusive value="0">
+                      </xs:minExclusive>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+                <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>Localized name of the state of this folder item.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="action" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Current action set on this folder item.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="id" minOccurs="1" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Action ID.
+
+                      Available Actions:
+
+                      No Action = 0,
+                      None = 1,
+                      Run = 2,
+                      Suspend = 3,
+                      Cancel = 4,
+                      End = 5,
+                      Scheduled Run = 6,
+                      Auto Run = 7,
+                    </xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                      <xs:minInclusive value="0">
+                      </xs:minInclusive>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+                <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>Localized name of the current action set on this folder item.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+					</xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ContentJob">
+    <xs:annotation>
+      <xs:documentation>
+        Represents a Content Scan Job.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="FolderItem">
+        <xs:sequence>
+          <xs:element name="options" minOccurs="1" maxOccurs="1">
+            <xs:complexType>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url to the options</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="application" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Application</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:attribute name="app-id" type="xs:int" use="required">
+                <xs:annotation>
+                  <xs:documentation>Application ID</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="scan-log" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>ScanLog</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url to the scan log</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+           <xs:element name="statistics" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Job Statistics</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url to the job statistics</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Folders">
+    <xs:annotation>
+      <xs:documentation>
+        Represents a collection of folders.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="folder" type="Folder">
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Error">
+    <xs:annotation>
+      <xs:documentation>
+        Object returned when an error occurs during a web service request.  This object is accompanied with an HTTP Status of 4xx/5xx.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Serviceability code defining the error that occurred.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="stack-trace" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            This field provides stack trace information for debugging purposes.  This is not enabled by default.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="help" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Provides information about the error in question.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+              </xs:annotation>
+            </xs:any>
+          </xs:sequence>
+          <xs:attribute name="weblink" type="xs:string" use="required">
+            <xs:annotation>
+              <xs:documentation>Link to online help for this error code.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="message" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Localized description of the serviceability code.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ReportPack">
+    <xs:annotation>
+      <xs:documentation>
+        Represents a Report Pack.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="FolderItem">
+        <xs:sequence>
+          <xs:element name="reports" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Provides summary information about the collection of reports belonging to this report pack.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="count" type="xs:int">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Count of reports in this report pack.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+                  </xs:annotation>
+                </xs:any>
+              </xs:sequence>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url to access the reports collection.</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Dashboard">
+    <xs:annotation>
+      <xs:documentation>
+        Represents a Dashboard.  Currently dashboard data is not available through web services.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="FolderItem">
+        <xs:sequence>
+          <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Report">
+    <xs:annotation>
+      <xs:documentation>
+        Represents a Report object.  This object describes basic information about the report, such as the number of issues found.  Note that this object is equivalent to the Report Pack Summary in the WebUI.  All numbers are current as of the last time the Report Pack was run.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="BasicObject">
+        <xs:sequence>
+          <xs:element name="summary" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Provides summary data about this report.  Equivalent to the summary sentences in the Report Pack Summary Web UI.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="sentence" type="xs:string" minOccurs="1" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>Full summary sentence including values.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:element name="format" type="xs:string" minOccurs="1" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>Summary format excluding values.  Placeholders indicate location of values.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:element name="value" minOccurs="1" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Numeric value representing a summary value such as number of issues, number of pages etc.</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:simpleContent>
+                      <xs:extension base="xs:int">
+                        <xs:attribute name="index" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>Position in the summary sentence where this value belongs.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                      </xs:extension>
+                    </xs:simpleContent>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Provides access to a report's raw data.  Users requesting this will be returned the table of data displayed in the WebUI (according to the default view).
+                Any default grouping will be removed, and only columns which are visible by default will be returned.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+                  </xs:annotation>
+                </xs:any>
+              </xs:sequence>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url to access the report's data (as seen in the WebUI).</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="issues" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Provides access to a report's issues.  Note that this is only valid for issue managed reports.  Instead of simply returning the table of data, this service will return a collection of issues,
+                representing the data displayed in the 'About This Issue' view in the Web UI.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+                  </xs:annotation>
+                </xs:any>
+              </xs:sequence>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url to access the report's collection of issues.</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+
+
+          <xs:element name="issue-counts-severity" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>A collection of the counts of issues at various severity levels.  Equivalent to the severity columns in Report Pack Summary in the Web UI.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="issue-count" minOccurs="1" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Represents a single issue count, either by severity or status.</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="severity" type="Severity" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                          <xs:documentation>Indicates that this issue count is based on severity.</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="count" type="xs:int" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                          <xs:documentation>The count of issues in the specified category.</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+
+          <xs:element name="issue-counts-status" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>A collection of the counts of issues at various status levels.  Equivalent to the status columns in Report Pack Summary in the Web UI.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="issue-count" minOccurs="1" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Represents a single issue count, either by severity or status.</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="status" type="Status" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                          <xs:documentation>Indicates that this issue count is based on status.</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="count" type="xs:int" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                          <xs:documentation>The count of issues in the specified category.</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="last-updated" minOccurs="1" maxOccurs="1" type="xs:dateTime">
+            <xs:annotation>
+              <xs:documentation>
+                The last time this report was modified.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FolderItems">
+    <xs:annotation>
+      <xs:documentation>Represents a collection of folder items (jobs, report packs, dashboards).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="content-scan-job" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="report-pack" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="dashboard" minOccurs="0" maxOccurs="unbounded"  />
+      <xs:element ref="import-job" minOccurs="0" maxOccurs="unbounded" >
+      </xs:element>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Reports">
+    <xs:annotation>
+      <xs:documentation>
+        Represents a collection of Reports.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="report" type="Report" minOccurs="0" maxOccurs="unbounded">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ImportJob">
+    <xs:annotation>
+      <xs:documentation>
+        Represents an Import Job.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="FolderItem">
+        <xs:sequence>
+          <xs:element name="application" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Application</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:attribute name="app-id" type="xs:int" use="required">
+                <xs:annotation>
+                  <xs:documentation>Application ID</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Continue">
+    <xs:annotation>
+      <xs:documentation>
+        Object returned when a web service request takes longer than the server request timeout.  This allows for tasks which take a particularly long time
+        (reports with large amounts of data, or reports with complex data) to continue running on the server.  Part of this object is an href, which will allow access to the running task
+        cached on the server.  Requesting this URL will attach to the running task and continue to wait for it to complete.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="message" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Description of the reason for the Continue object.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="duration" type="xs:int" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Total duration of the task thus far (seconds).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+    <xs:attribute name="href" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Url to access the running task.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="sort">
+    <xs:annotation>
+      <xs:documentation>Specifies the field to initially sort the grid on. If omitted, no sort is performed initially.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="field" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies the field name to initially sort the grid on. i.e. "doc-id"</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="direction" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies the direction to initially sort the grid on. i.e. "ASC" If omitted, default is ascending.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ASC">
+            <xs:annotation>
+              <xs:documentation>Sort Ascending</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DESC">
+            <xs:annotation>
+              <xs:documentation>Sort Descending</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ReportView">
+    <xs:annotation>
+      <xs:documentation>
+        Object used to customize the data returned when requesting a report's data or collection of issues.
+        This object is used by POSTing the XML to either the /data or /issues web services (rather than using GET to return the default data)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="columns" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Currently Unused.  Reserved for column specification.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sort" type="sort" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Specifies the primary sort of the grid.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="group" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Specifies the inital grouping of the grid. If omitted, initial view is a flat list.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="field" type="xs:string" use="required">
+            <xs:annotation>
+              <xs:documentation>Specifies the field to initially group the grid on. If omitted, initial view is a flat list.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="filters" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Specifies the initial filters of the grid. This element is simply a container for one or more "filter" elements.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="filter" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation>Specifies an initial filter of the grid.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:attribute name="field" type="xs:string" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Specifies the field to filter on.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="value" type="xs:string" use="required">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Specifies the value to filter on. If the "in" attribute is set to true, this field contains a bar '|' delimited list
+                      of values to be added to the 'in' clause.If not, it is simply one value.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="search" type="xs:boolean" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Specifies whether or not this is a search filter. If omitted, default is "false". If this attribute is set, filter
+                      will be executed using a 'LIKE' clause rather than an '=' clause.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="operation" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Specifies the operation to use on a search filter.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="like">
+                        <xs:annotation>
+                          <xs:documentation>Returns records matching the search string.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="notlike">
+                        <xs:annotation>
+                          <xs:documentation>Returns records not matching the search string.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="equals">
+                        <xs:annotation>
+                          <xs:documentation>Returns records which equal the search string exactly.</xs:documentation>
+                        </xs:annotation>
+                      </xs:enumeration>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="hidden" type="xs:boolean" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Unused in web services.  Used only for Web UI purposes.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="in" type="xs:boolean" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Specifies whether or not this is an 'in' filter. If omitted, default is "false". If this attribute is set, filter
+                      will be executed using a 'in' clause rather than an '=' clause. The list of values is set in the "value" attribute,
+                      delimited using the bar '|' character.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Issue">
+    <xs:annotation>
+      <xs:documentation>Issue object.  Not to be instantiated directly.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="BaseIssue">
+        <xs:sequence>
+          <xs:element name="parent" maxOccurs="1" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="id" type="xs:int" minOccurs="1" maxOccurs="1">
+                  <xs:annotation>
+                    <xs:documentation>Parent (Report) ID.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+                  </xs:annotation>
+                </xs:any>
+              </xs:sequence>
+              <xs:attribute name="href" type="xs:string" use="required">
+                <xs:annotation>
+                  <xs:documentation>Url of the parent object</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="first-identified" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Time this issue was first identified by the system.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="last-managed" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                The last time an issue management action was performed on this issue.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="comment" type="xs:string" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Any comments associated with this issue.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="source-jobs" type="SourceJobs" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>
+                Contains a listing of all jobs which have identified this issue.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Advisory">
+    <xs:annotation>
+      <xs:documentation>Contains advisory information about this issue.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="content" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Contains an HTML document describing information about the type of issue encountered.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Severity">
+    <xs:annotation>
+      <xs:documentation>
+        Represents the severity of an issue
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Severity ID.
+
+            Available Severities:
+
+            Information	= 100,
+            Low			= 200,
+            Medium		= 300,
+            High		= 400
+
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:int">
+            <xs:minInclusive value="0">
+            </xs:minInclusive>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Localized name of the current severity set on this issue.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Status">
+    <xs:annotation>
+      <xs:documentation>
+        Represents the status of an item
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Status ID.
+
+            Available Statuses:
+
+            Invalid		= 0,
+            Open		= 1,
+            InProgress	= 2,
+            Reopened	= 3,
+            Noise		= 4,
+            Passed		= 5,
+            Fixed		= 6
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:int">
+            <xs:minInclusive value="0">
+            </xs:minInclusive>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Localized name of the current status set on this issue.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BasicIssue">
+    <xs:annotation>
+      <xs:documentation>Represents a basic issue (i.e. broken link, spelling mistake)</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="Issue">
+        <xs:sequence>
+          <xs:element name="issue-details" minOccurs="1" maxOccurs="1" type="BasicIssueDetails">
+            <xs:annotation>
+              <xs:documentation>Contains localized advisory information about this issue.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BasicIssueDetails">
+    <xs:annotation>
+      <xs:documentation>Contains more detailed information about a basic (non-security) issue.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="advisory" minOccurs="1" maxOccurs="1" type="BasicIssueDetailsAdvisory">
+        <xs:annotation>
+          <xs:documentation>Contains advisory information about this issue.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="stored-responses" minOccurs="1" maxOccurs="1" type="IssueStoredResponses">
+        <xs:annotation>
+          <xs:documentation>Contains information about the stored responses associated with this issue.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IssueStoredResponses">
+    <xs:annotation>
+      <xs:documentation>Contains information about the stored responses associated with this issue.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="stored-response" type="IssueStoredResponse">
+        <xs:annotation>
+          <xs:documentation>
+            Contains information about a single stored response.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IssueStoredResponse">
+    <xs:annotation>
+      <xs:documentation>Contains information about a stored response associated with this issue.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="response-highlights" type="IssueResponseHighlights" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Contains a collection of highlights for this response to indicate where an issue exists.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="capture-date" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Contains the time the response was captured.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="is-truncated" type="xs:boolean" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Whether or not the response was fully downloaded or not.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="raw-response" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Contains the raw HTTP response.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="raw-headers" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Contains the raw HTTP headers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="normalized-response" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Contains the normalized HTTP response.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IssueResponseHighlights">
+    <xs:annotation>
+      <xs:documentation>Contains a collection of highlights for this response to indicate where an issue exists.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="response-highlight" type="IssueResponseHighlight">
+        <xs:annotation>
+          <xs:documentation>
+            Contains information about a single highlight.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IssueResponseHighlight">
+    <xs:annotation>
+      <xs:documentation>Contains the location of a highlight.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="xpath" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>XPath to indicate the node in the normalized response to highlight.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="offset" type="xs:int" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Character offset in the raw response to start the highlight.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="length" type="xs:int" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Length of highlight (use in conjunction with 'offset' to idenfity highlighted portion)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="line" type="xs:int" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Line number to highlight.  If specified, entire line is considered.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SecurityIssueDetails">
+    <xs:annotation>
+      <xs:documentation>Contains more detailed information about a security issue.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="advisory" type="SecurityIssueDetailsAdvisory" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Describes the type of issue encountered (advisory and fix recommendations)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="variants" type="SecurityIssueDetailsVariants" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Contains a list of all variants which were used to detect this issue.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TaintResult" type="TaintResultType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            If the issue is a 'code analysis' (white-box) issue, this element will contain information about how the issue was detected.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="correlated-issues" type="SecurityIssueDetailsCorrelatedIssues" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            If this issue is a 'code analysis' (white-box) issue, this element will list any security issues (black-box) which have also found this problem.
+            If this issue is a security issue, this element will list any  'code analysis' (white-box) issues which have also found this problem.
+
+            Note: In order to take advantage of this feature, the 'Correlated Security Issues' report must be included in the report pack along with the Security Issues
+            and Code Analysis Issues report.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SecurityIssueDetailsVariants">
+    <xs:annotation>
+      <xs:documentation>
+        Contains a list of all variants which were used to detect this issue.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="variant" type="SecurityIssueDetailsVariant">
+        <xs:annotation>
+          <xs:documentation>
+            Contains information about a single security issue variant.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType mixed="true" name="SecurityIssueDetailsVariant">
+    <xs:annotation>
+      <xs:documentation>
+        Contains information about a single security issue variant.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0">
+      <xs:element name="id" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Variant ID.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="difference" type="SecurityIssueDetailsVariantDifference">
+        <xs:annotation>
+          <xs:documentation>Describes the differences applied between the original request and the mutated request.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="reasoning" type ="SecurityIssueDetailsVariantReasoning">
+        <xs:annotation>
+          <xs:documentation>Describes the reasons which determined that this security vulnerability exists.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="execution-flow" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>If available, describes the flow of execution through the source code.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="code-snippet" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>If available, shows a snippet of the code in which the JSA issue has been found</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="traffic">
+        <xs:annotation>
+          <xs:documentation>
+            Contains HTTP traffic information about this variant.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="test-http-traffic" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>Contains the test (mutated) HTTP traffic</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="original-http-traffic" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  Contains the original HTTP traffic detected by the scan.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+              </xs:annotation>
+            </xs:any>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SecurityIssueDetailsVariantCipherSuites">
+    <xs:sequence maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="CipherSuite" type="SecurityIssueDetailsVariantCipherSuite" minOccurs="0" maxOccurs="1">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SecurityIssueDetailsVariantCipherSuite">
+    <xs:sequence>
+      <xs:element name="Id" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The id of the cipher suite
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The name of the cipher suite
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SslVersion" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The ssl version of the cipher suite
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name ="SecurityIssueDetailsVariantReasoning">
+    <xs:annotation>
+      <xs:documentation>Describes the reasons which determined that this security vulnerability exists.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="validation-infos" type="SecurityIssueDetailsVariantReasoningValidationInfos" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Contains a collection of reasons.  Reasons will either be static text explaining the reasoning,
+            or a section of the test HTTP traffic which caused the issue to trigger.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SecurityIssueDetailsVariantReasoningValidationInfos">
+    <xs:annotation>
+      <xs:documentation>
+        Contains a collection of reasons.  Reasons will either be static text explaining the reasoning,
+        or a section of the test HTTP traffic which caused the issue to trigger.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="validation-info">
+        <xs:annotation>
+          <xs:documentation>
+            Contains a single reason that the issue was triggered.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+          <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="CipherSuites" type="SecurityIssueDetailsVariantCipherSuites"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:annotation>
+              <xs:documentation>The type of reason.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="title">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Static text describing the reason.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="highlight">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Based on some data found in the test HTTP traffic, it was determined that a security vulnerability exists.
+                      The additional attributes on this element describe where in the test traffic the trigger was found.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="name">
+                  <xs:annotation>
+                    <xs:documentation>
+                      The name of the current validation info.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="testUri">
+                  <xs:annotation>
+                    <xs:documentation>
+                      The Uri where the test is sent.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="reasoning">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Static text describing the reason.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="appSource">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Glassbox analysis has found this vulnerability.
+                      The additional attributes on this element provide information about where in source this vulnerability has been found.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="paramValue">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Glassbox analysis has found a vulnerability by changing the value of a parameter to this value.
+                      The attribute on this element provide the index of the parameter in the input paramters of the identified method.
+                      Other information specifying which method this parameter belongs to is given in attributes of the node with type 'appSource'.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="paramSubstring">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Glassbox analysis has found a vulnerability using the part of a given value specified by attributes of this node (index and length).
+                      The information about the corresponding parameter and its value is in 'paramValue' node.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="additionalData">
+                  <xs:annotation>
+                    <xs:documentation>
+                      Additional data to the variant.
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="index" type="xs:int" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'highlight' reason type, this value is the index into the test traffic where to begin the highlight.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="length" type="xs:int" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'highlight' reason type, this value indicates the length of the highlight.
+                Together with the 'index' attribute, it can be determined the exact text in the HTTP traffic that caused the issue to trigger.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="sinkMethodName" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'appSource' reason type, this value is the Glassbox sink method name.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="methodParameters" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'appSource' reason type, this value is the sink method parameters for the Glassbox issue.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="methodReturnValue" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'appSource' reason type, this value is the type of the return value for the Glassbox issue's sink method.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="className" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'appSource' reason type, this value is the Glassbox issue class name.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="enclosingMethod" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'appSource' reason type, this value is the Glassbox issue's enclosing method name.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="fileName" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'appSource' reason type, this value is the file name for the Glassbox issue's enclosing method.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="lineNumber" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'appSource' reason type, this value is the line number of the call to sink method in enclosing method.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="paramArgIndex" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'paramValue' reason type, this value is the Glassbox issue's argument index.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="paramSubstringIndex" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'paramSubstring' reason type, this value is the Glassbox issue's highlight start index.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="paramSubstringLength" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                Used only with the 'paramSubstring' reason type, this value is the Glassbox issue's highlight string length.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name ="SecurityIssueDetailsVariantDifference">
+    <xs:annotation>
+      <xs:documentation>Describes the differences applied between the original request and the mutated request.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="request-modifications" type="SecurityIssueDetailsVariantDifferenceRequestmodifications" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Collection of modifications made to the original request to produce the mutated request.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SecurityIssueDetailsVariantDifferenceRequestmodifications">
+    <xs:annotation>
+      <xs:documentation>
+        Collection of modifications made to the original request to produce the mutated request.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="request-modification">
+        <xs:annotation>
+          <xs:documentation>
+            A single modification made to the original request
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="id" type="xs:string" minOccurs="0" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  Request Modification ID.  This is simply the Variant ID plus and index.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="modified-value" type="xs:string" minOccurs="0" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>The modified field value used in the mutated request.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="original-value" type="xs:string" minOccurs="0" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>The value of the field in the original request.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:annotation>
+              <xs:documentation>
+                Describes the type of modification made.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Added">
+                  <xs:annotation>
+                    <xs:documentation>An addition was made to the request.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Changed">
+                  <xs:annotation>
+                    <xs:documentation>A change was made to the request.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Removed">
+                  <xs:annotation>
+                    <xs:documentation>A removal was made from the request.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="None">
+                  <xs:annotation>
+                    <xs:documentation>No modification was made.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="element" use="required">
+            <xs:annotation>
+              <xs:documentation>Type of element that was modified.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Path">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that the Path Element was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Parameter">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that a Parameter Element (either in the query string or body) was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Cookie">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that a Cookie Element was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Method">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that the Method Element was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Header">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that a Header Element was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Body">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that the entire request body was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Query">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that the entire query string was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Port">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that the Port Element was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Scheme">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that the Scheme Element was modified.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="HttpVersion">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that the HTTP version element was modified</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Other">
+                  <xs:annotation>
+                    <xs:documentation>Indicates that no modification was done.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="element-name" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>The name of the element that was changed.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SecurityIssueDetailsAdvisory">
+    <xs:annotation>
+      <xs:documentation>Describes the type of issue encountered (advisory and fix recommendations)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Name of the vulnerability.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="testDescription" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Whether this is an Application or Infrastructure test.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="threatClassification">
+        <xs:annotation>
+          <xs:documentation>
+            Provides information on the threat class this vulnerability belongs to.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="name" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>Name of the threat class.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="reference" type="xs:string" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>
+                  Link to online resource describing the threat class.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="testTechnicalDescription">
+        <xs:annotation>
+          <xs:documentation>
+            Provides a technical description of the vulnerability.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+              <xs:element name="text" type="xs:string" />
+              <xs:element name="indentText" type="xs:string" />
+              <xs:element maxOccurs="unbounded" name="br" />
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="causes">
+        <xs:annotation>
+          <xs:documentation>Provides the various causes of this vulnerability to exist.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence maxOccurs="unbounded">
+            <xs:element name="cause" type="xs:string"></xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="cve">
+        <xs:annotation>
+          <xs:documentation>
+            If available, provides the CVE reference number and link to online reference.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence minOccurs="0" maxOccurs ="unbounded">
+            <xs:element name="link">
+              <xs:annotation>
+                <xs:documentation>Link to CVE online reference.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:string">
+                    <xs:attribute name="target" type="xs:string" use="required" />
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="securityRisks">
+        <xs:annotation>
+          <xs:documentation>Lists the potential security risks of this vulnerability.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence maxOccurs="unbounded">
+            <xs:element name="securityRisk" type ="xs:string">
+              <xs:annotation>
+                <xs:documentation>Describes a single security risk.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="affectedProducts">
+        <xs:annotation>
+          <xs:documentation>Lists the products which could be affected by this vulnerability.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="affectedProduct" type="xs:string" />
+              <xs:element name="text" type="xs:string" />
+              <xs:element name="indentText" type="xs:string" />
+              <xs:element maxOccurs="unbounded" name="br" />
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="references">
+        <xs:annotation>
+          <xs:documentation>Lists any additional references.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="text" type="xs:string" />
+              <xs:element name="link">
+                <xs:annotation>
+                  <xs:documentation>Link to online reference.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="target" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="fixRecommendations">
+        <xs:annotation>
+          <xs:documentation>Collection of fix recommendations for resolving this issue.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="fixRecommendation">
+              <xs:annotation>
+                <xs:documentation>A single fix recommendation for a given technology.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:choice maxOccurs="unbounded">
+                    <xs:element name="text" type="xs:string" />
+                    <xs:element name="indentText" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" name="br" />
+                    <xs:element name="li">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="text" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="code" type="xs:string" />
+                    <xs:element name="link">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="target" type="xs:string" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:choice>
+                </xs:sequence>
+                <xs:attribute name="type" type="xs:string" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Type of fix recommendation.  'General' indicates it is a general recommendation for all technologies, or can be for a particular technology (J2EE, .NET, PHP).</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SecurityIssue">
+    <xs:annotation>
+      <xs:documentation>Represents a security issue.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="Issue">
+        <xs:sequence>
+          <xs:element name="issue-details" type="SecurityIssueDetails" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Contains more detailed information about a security issue.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SourceJobs">
+    <xs:annotation>
+      <xs:documentation>
+        Contains a listing of all jobs which have identified this issue.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="source-job" type="SourceJob" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Represents a single source job.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SourceJob">
+    <xs:annotation>
+      <xs:documentation>Represents a single source job.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Job Name
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="folder" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Full path to folder containing the job</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="last-run" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Timestamp indicating the last time this job was run.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BasicIssueDetailsAdvisory">
+    <xs:sequence minOccurs ="0" maxOccurs ="1">
+      <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Issues">
+    <xs:annotation>
+      <xs:documentation>Represents a collection of issues (basic-issue (non-security), or security-issue)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="basic-issue" type="BasicIssue" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="security-issue" type="SecurityIssue" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BaseIssue">
+    <xs:annotation>
+      <xs:documentation>Base issue object.  Not to be instantiated directly.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id" type="xs:int"  minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>ID of the issue.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="severity" type="Severity" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Severity of the issue.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="status" type="Status" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Status of the issue.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="issue-type" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Type of issue.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="href" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>REST Url of issue</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="weblink" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>WebUI Url of issue</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CorrelatedDynamicIssue">
+    <xs:annotation>
+      <xs:documentation>A correlated dynamic (security) issue.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="BaseIssue">
+        <xs:sequence>
+          <xs:element name="element" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Element on which the vulnerability exists.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="element-type" type="xs:string" minOccurs ="0">
+            <xs:annotation>
+              <xs:documentation>Element type on which the vulnerability exists.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="test-url" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Test URL</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="static-issue-id" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Issue ID.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="static-issue-severity" type="Severity">
+            <xs:annotation>
+              <xs:documentation>Issue severity.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="static-issue-type" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Issue Type.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="static-issue-project" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Project to which the code analysis issue belongs.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="static-issue-file" type ="xs:string">
+            <xs:annotation>
+              <xs:documentation>File to which the code analysis issue belongs.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="static-issue-line" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Line in the file to which the code analysis issue belongs.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CorrelatedStaticIssue">
+    <xs:annotation>
+      <xs:documentation>A correlated static (code analysis) issue.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="BaseIssue">
+        <xs:sequence>
+          <xs:element name="project" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Project to which the code analysis issue belongs.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="file" type ="xs:string">
+            <xs:annotation>
+              <xs:documentation>File to which the code analysis issue belongs.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="line" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Line in the file to which the code analysis issue belongs.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="dynamic-issue-id" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Issue ID.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="dynamic-issue-severity" type="Severity">
+            <xs:annotation>
+              <xs:documentation>Issue severity.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="dynamic-issue-type" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Issue Type.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="dynamic-issue-test-url" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Test URL</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="dynamic-issue-element" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Element on which the vulnerability exists.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Allows for future expansion without affecting current schema.</xs:documentation>
+            </xs:annotation>
+          </xs:any>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SecurityIssueDetailsCorrelatedIssues">
+    <xs:annotation>
+      <xs:documentation>A collection of correlated issues (either static or dynamic).  The collection will contain all of the same type.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="correlated-static-issue" type="CorrelatedStaticIssue" minOccurs="0" maxOccurs ="unbounded"/>
+      <xs:element name="correlated-dynamic-issue" type="CorrelatedDynamicIssue" minOccurs="0" maxOccurs ="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Option">
+    <xs:annotation>
+      <xs:documentation>An option of a job. The option will contain value and service request of that option.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="value" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Value of the option.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="href" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Service request to get the option.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Options">
+    <xs:annotation>
+      <xs:documentation>Collection of option. Contains all possible options of a job.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="option" minOccurs="1" maxOccurs="unbounded" type="Option">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Available-Option">
+    <xs:annotation>
+      <xs:documentation>Available option for a service request.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="href" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Service request url to get the option details.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Available-Options">
+    <xs:annotation>
+      <xs:documentation>Collection of available-option. Contains all possible options for service request.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="available-option" minOccurs="1" maxOccurs="unbounded" type="Available-Option">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Host-Mapping">
+    <xs:annotation>
+      <xs:documentation>Entry that maps a test server name or pattern to a production server.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="test-host-pattern" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>This is the test host name or pattern</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="production-host" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>This is the production host name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Host-Mappings">
+    <xs:annotation>
+      <xs:documentation>List of test server name or pattern to production server name or pattern mapping.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="host-mapping" minOccurs="1" maxOccurs="unbounded" type="Host-Mapping">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="Published-Report">
+    <xs:annotation>
+      <xs:documentation>Entry that contains information about reports published to network management systems.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="id" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>This is the id of the report</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="report-name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>This is the report name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="report-pack-name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>This is the report pack name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="report-pack-folder" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>This is the location of the report pack</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="href" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>This is the link to the report summary</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Published-Reports">
+    <xs:annotation>
+      <xs:documentation>List of reports published to network management systems.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="published-report" minOccurs="1" maxOccurs="unbounded" type="Published-Report">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- From AppScan Developer Edition -->
+  <xs:complexType name="TaintResultSetType">
+    <xs:sequence>
+      <xs:element name="ignoredClass" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      <xs:element name="TaintResult" type="TaintResultType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+    <xs:attribute name="scanStartTime" type="xs:dateTime" use="required"></xs:attribute>
+    <xs:attribute name="scanEndTime" type="xs:dateTime" use="required"></xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TaintResultType">
+    <xs:annotation>
+      <xs:documentation>
+        If the issue is a 'code analysis' (white-box) issue, this element will contain information about how the issue was detected.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="taintSource" type="SourceLocation" minOccurs="0" maxOccurs="1"></xs:element>
+      <xs:element name="taintStep" type="SourceLocation" minOccurs="0" maxOccurs="unbounded"></xs:element>
+      <xs:element name="taintSink" type="SourceLocation" minOccurs="0" maxOccurs="1"></xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="optional"></xs:attribute>
+    <xs:attribute name="ruleID" type="xs:string" use="optional"></xs:attribute>
+    <xs:attribute name="userSeverity" use="optional">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="informational"></xs:enumeration>
+          <xs:enumeration value="low"></xs:enumeration>
+          <xs:enumeration value="medium"></xs:enumeration>
+          <xs:enumeration value="high"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SourceHighlight">
+    <xs:attribute name="lineNumber" type="xs:int" use="required"></xs:attribute>
+    <xs:attribute name="color" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="green"></xs:enumeration>
+          <xs:enumeration value="red"></xs:enumeration>
+          <xs:enumeration value="blue"></xs:enumeration>
+          <xs:enumeration value="purple"></xs:enumeration>
+          <xs:enumeration value="yellow"></xs:enumeration>
+          <xs:enumeration value="gray"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SourceLocation">
+    <xs:sequence>
+      <xs:element name="snippetText" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+      </xs:element>
+      <xs:element name="highlight" type="SourceHighlight"
+				minOccurs="0" maxOccurs="unbounded">
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="fileName" type="xs:string" use="required"></xs:attribute>
+    <xs:attribute name="projectName" type="xs:string"
+			use="optional">
+    </xs:attribute>
+    <xs:attribute name="threadId" type="xs:string" use="optional"></xs:attribute>
+    <xs:attribute name="packageName" type="xs:string"
+			use="optional">
+    </xs:attribute>
+    <xs:attribute name="className" type="xs:string"
+			use="optional">
+    </xs:attribute>
+    <xs:attribute name="methodName" type="xs:string"
+			use="optional">
+    </xs:attribute>
+    <xs:attribute name="methodSignature" type="xs:string"
+			use="optional">
+    </xs:attribute>
+    <xs:attribute name="stackDepth" type="xs:int" use="optional"></xs:attribute>
+    <xs:attribute name="lineNumber" type="xs:int" use="optional"></xs:attribute>
+    <xs:attribute name="snippetStartLine" type="xs:int"
+			use="optional">
+    </xs:attribute>
+
+    <xs:attribute name="isPossibleSanitizer" type="xs:boolean"></xs:attribute>
+    <xs:attribute name="hasMapping" type="xs:boolean"></xs:attribute>
+    <xs:attribute name="rawFileName" type="xs:string"></xs:attribute>
+    <xs:attribute name="rawClassName" type="xs:string"></xs:attribute>
+    <xs:attribute name="rawLineNumber" type="xs:int"></xs:attribute>
+  </xs:complexType>
+  <!-- END From AppScan Developer Edition -->
+
+  <!-- Root Elements -->
+  <xs:element name="variants" type="SecurityIssueDetailsVariants">
+  </xs:element>
+  <xs:element name="variant" type="SecurityIssueDetailsVariant">
+  </xs:element>
+  <xs:element name="reasoning" type="SecurityIssueDetailsVariantReasoning">
+  </xs:element>
+  <xs:element name="difference" type="SecurityIssueDetailsVariantDifference">
+  </xs:element>
+  <xs:element name="validation-infos" type="SecurityIssueDetailsVariantReasoningValidationInfos">
+  </xs:element>
+  <xs:element name="request-modifications" type="SecurityIssueDetailsVariantDifferenceRequestmodifications">
+  </xs:element>
+  <xs:element name="issues" type="Issues">
+  </xs:element>
+  <xs:element name="advisory" type="SecurityIssueDetailsAdvisory">
+  </xs:element>
+  <xs:element name="folder-items" type="FolderItems">
+  </xs:element>
+  <xs:element name="folder-item" type="FolderItem">
+  </xs:element>
+  <xs:element name="version" type="Version" />
+  <xs:element name="folder" type="Folder" />
+  <xs:element name="folders" type="Folders" />
+  <xs:element name="import-job" type="ImportJob">
+  </xs:element>
+  <xs:element name="continue" type="Continue">
+  </xs:element>
+  <xs:element name="error" type="Error">
+  </xs:element>
+  <xs:element name="content-scan-job" type="ContentJob">
+  </xs:element>
+  <xs:element name="report-pack" type="ReportPack">
+  </xs:element>
+  <xs:element name="dashboard" type="Dashboard">
+  </xs:element>
+  <xs:element name="report" type="Report">
+  </xs:element>
+  <xs:element name="reports" type="Reports">
+  </xs:element>
+  <xs:element name="report-view" type="ReportView">
+  </xs:element>
+  <xs:element name="basic-issue" type="BasicIssue">
+  </xs:element>
+  <xs:element name="security-issue" type="SecurityIssue">
+  </xs:element>
+  <xs:element name="severity" type="Severity">
+  </xs:element>
+  <xs:element name="status" type="Status">
+  </xs:element>
+  <xs:element name="issue" type="Issue">
+  </xs:element>
+  <xs:element name="issue-details" type="BasicIssueDetails">
+  </xs:element>
+  <xs:element name="source-jobs" type="SourceJobs">
+  </xs:element>
+  <xs:element name="correlated-dynamic-issue" type="CorrelatedDynamicIssue">
+  </xs:element>
+  <xs:element name="correlated-static-issue" type="CorrelatedStaticIssue">
+  </xs:element>
+  <xs:element name="base-issue" type="BaseIssue">
+  </xs:element>
+  <xs:element name="TaintResult" type="TaintResultType">
+  </xs:element>
+  <xs:element name="correlated-issues" type="SecurityIssueDetailsCorrelatedIssues">
+  </xs:element>
+  <xs:element name="basic-object" type="BasicObject">
+  </xs:element>
+  <xs:element name="option" type="Option"></xs:element>
+  <xs:element name="options" type="Options"></xs:element>
+  <xs:element name="available-option" type="Available-Option"></xs:element>
+  <xs:element name="available-options" type="Available-Options"></xs:element>
+  <xs:element name="host-mapping" type="Host-Mapping"></xs:element>
+  <xs:element name="host-mappings" type="Host-Mappings"></xs:element>
+  <xs:element name="published-report" type="Published-Report"></xs:element>
+  <xs:element name="published-reports" type="Published-Reports"></xs:element>
+  <xs:element name="statistics" type="JobStatistics"></xs:element>
+  <xs:element name="scan-log" type="JobScanLog"></xs:element>
+	<xs:element name="server-group-domain" type="ServerGroupDomain"></xs:element>
+	<xs:element name="server-group-iprange" type="ServerGroupIPRange"></xs:element>
+	<xs:element name="server-group" type="ServerGroup"></xs:element>
+	<xs:element name="server-groups" type="ServerGroups"></xs:element>
+	<xs:element name="testpolicy" type="TestPolicy"></xs:element>
+	<xs:element name="testpolicies" type="TestPolicies"></xs:element>
+	<xs:element name="user-security-permission" type="UserSecurityPermission"></xs:element>
+	<xs:element name="user-security-permissions" type="UserSecurityPermissions"></xs:element>
+	<xs:element name="schedule-frequency" type="ScheduleFrequencyValue"></xs:element>
+	<xs:element name="scan-schedule" type="ScanSchedule"></xs:element>
+
+	<xs:complexType name="TestPolicy">
+		<xs:annotation>
+			<xs:documentation>Test Policies available in the application</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="id" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>test policy id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="name" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>test policy name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="description" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>test policy description</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="TestPolicies">
+		<xs:annotation>
+			<xs:documentation>List of all Test Policies</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="testpolicy" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ServerGroupDomain">
+		<xs:annotation>
+			<xs:documentation>Security groups to control the domain / IP access for the users</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="id" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>Server group id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="domain" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Server group domain</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	
+	<xs:complexType name="ServerGroupIPRange">
+		<xs:annotation>
+			<xs:documentation>Security groups to control the domain / IP access for the users</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="id" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>Server group id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="iprange" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Server group ip range</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	
+	<xs:complexType name="ServerGroup">
+		<xs:annotation>
+			<xs:documentation>Security groups to control the domain / IP access for the users</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="server-group-domain" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="server-group-iprange" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>Server group id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="name" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Server group name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	
+	<xs:complexType name="ServerGroups">
+		<xs:annotation>
+			<xs:documentation>Security groups to control the domain / IP access for the users</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="server-group" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UserSecurityPermission">
+		<xs:annotation>
+			<xs:documentation>User Security Permission entry</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="userid" type="xs:int"/>
+			<xs:element name="username" type="xs:string"/>
+			<xs:element name="servergroup" type="xs:string" />
+			<xs:element name="testpolicy" type="xs:string" />
+		</xs:sequence>
+		<xs:attribute name="UserSecurityPermissionId" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>User Security Permission Id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="UserSecurityPermissions">
+		<xs:annotation>
+			<xs:documentation>User Security Permission for the users</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="user-security-permission" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	
+  <xs:complexType name="JobScanLog">
+    <xs:annotation>
+      <xs:documentation>Log created during the last scan.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="href" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Url to the scan log</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="log" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Contents of the scan log within HTML code to show correct links, colouring etc.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  
+  </xs:complexType>
+
+  <xs:complexType name="JobStatistics">
+    <xs:annotation>
+      <xs:documentation>Statistic details of the last scan.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="href" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Url to the job statistics</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="status" type="xs:string" use="optional"/>
+    <xs:attribute name="run-start"  type="xs:dateTime" use="optional"/>
+    <xs:attribute name="run-end"  type="xs:dateTime" use="optional"/>
+    <xs:attribute name="elapsed-time" type="xs:string" use="optional"/>
+    <xs:attribute name="net-scan-time" type="xs:string" use="optional"/>
+    <xs:attribute name="pages-found" type="xs:int" use="optional"/>
+    <xs:attribute name="pages-pending" type="xs:int" use="optional"/>
+    <xs:attribute name="broken-links" type="xs:int" use="optional"/>
+    <xs:attribute name="pages-scanned" type="xs:int" use="optional"/>
+    <xs:attribute name="page-scan-rate" type="xs:string" use="optional"/>
+    <xs:attribute name="scanning-phase" type="xs:string" use="optional"/>
+    <xs:attribute name="security-entities-found" type="xs:int" use="optional"/>
+    <xs:attribute name="security-entities-tested" type="xs:int" use="optional"/>
+    <xs:attribute name="security-entity-analysis-rate" type="xs:string" use="optional"/>
+    <xs:attribute name="security-issue-variants" type="xs:int" use="optional"/>
+    <xs:attribute name="requests-sent" type="xs:int" use="optional"/>
+  </xs:complexType>
+  
+  <xs:complexType name="ScheduleFrequencyValue">
+		<xs:annotation>
+			<xs:documentation>Schedule Frequency Value entry</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+		<xs:element name="minutes" type="xs:string" />
+		<xs:element name="hours" type="xs:string" />
+		<xs:element name="daily" type="xs:string" />
+		<xs:element name="weekly" type="xs:string" />
+		<xs:element name="monthly" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ScanSchedule">
+		<xs:annotation>
+			<xs:documentation>Scan Schedule for the job</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="scheduleEnabled" type="xs:boolean" />
+			<xs:element name="scheduleStartDate" type="xs:string" />
+			<xs:element name="scheduleEndDate" type="xs:string" />
+			<xs:element name="scheduleFrequency" type="ScheduleFrequencyValue" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="noEndDate" type="xs:boolean" />
+			<xs:element name="exclusionEnabled" type="xs:boolean"/>
+			<xs:element name="exclusionStartDate" type="xs:string" />
+			<xs:element name="exclusionEndDate" type="xs:string" />
+			<xs:element name="noBlockEndDate" type="xs:boolean" />
+			<xs:element name="exclusionFrequency" type="ScheduleFrequencyValue" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="exclusionStartTime" type="xs:string" />
+			<xs:element name="exclusionEndTime" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>
