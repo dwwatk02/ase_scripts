@@ -14,6 +14,6 @@ $scanTemplate = "573" # 573 = Regular Scan</code>
   <p></p>
   <p><b>Powershell console output example:</b></p>
 <img src="https://github.com/dwwatk02/images/blob/main/create_scan_screenshot.png">
-<hr>
+
 
 
