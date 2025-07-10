@@ -72,7 +72,7 @@ class ase(object):
       data={'userId': user, #User name for login to the AppScan Enterprise Server  
                   'password': passwd, #password for the user name provided above  
                   'featureKey': 'AppScanEnterpriseUser'}  # special parameter requested by the AppScan Enterprise server    
-      r = requests.post(self.asmServer+'/api/login', data=json.dumps(data), headers=headers, verify = False) #The url for login is https://<machineurl>/ase/services/login   
+      r = requests.post(self.asmServer+'/api/login', data=json.dumps(data), headers=headers, verify = False, timeout=60) #The url for login is https://<machineurl>/ase/services/login   
       return r.text #return the complete response in html format.
       
     #Return all the templates in the enterprise server in an xml message
