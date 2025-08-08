@@ -55,7 +55,8 @@ foreach ($app in $appList) {
 
     Write-Host "`nSearching for application ID for: $appName"
 
-    $matchingApp = $applications | Where-Object { $_.name -eq $appName }
+    Add-Type -AssemblyName System.Web
+    $matchingApp = $applications | Where-Object { [System.Web.HttpUtility]::HtmlDecode($_.name) -eq $appName }
 
     if (-not $matchingApp) {
         Write-Warning "Application '$appName' not found in ASE."
